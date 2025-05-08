@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useAppContext } from "../../context/AppContext";
 import { generateId, saveDay } from "../../utils/storage";
@@ -7,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/ca
 import { Separator } from "../../components/ui/separator";
 import { Play, PlusCircle, Clock, BanknoteIcon, Car } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import PauseButton from "../tracking/PauseButton";
 
 const Dashboard: React.FC = () => {
   const { userConfig, activeDay } = useAppContext();
@@ -58,11 +58,9 @@ const Dashboard: React.FC = () => {
         <>
           <Card className="bg-primary/5">
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex justify-between">
+              <CardTitle className="text-lg flex justify-between items-center">
                 <span>Jornada Actual</span>
-                <span className="text-sm font-normal text-muted-foreground">
-                  Iniciada a las {activeDay.start.startTime}
-                </span>
+                <PauseButton />
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -230,7 +228,7 @@ const Dashboard: React.FC = () => {
             <Button 
               variant="outline"
               className="w-full"
-              onClick={() => navigate("/end-day")}
+              onClick={() => navigate("/day-end")}
             >
               Finalizar jornada
             </Button>

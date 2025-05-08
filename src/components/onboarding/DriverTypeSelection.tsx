@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card } from "../../components/ui/card";
-import { Car, Buildings } from "lucide-react";
+import { Car, Building } from "lucide-react";
 
 interface DriverTypeSelectionProps {
   onSelect: (type: "taxi" | "platform") => void;
@@ -38,7 +38,7 @@ const DriverTypeSelection: React.FC<DriverTypeSelectionProps> = ({ onSelect }) =
         >
           <div className="flex items-center">
             <div className="rounded-full bg-slate-100 p-3">
-              <Buildings className="h-8 w-8 text-slate-700" />
+              <Building className="h-8 w-8 text-slate-700" />
             </div>
             <div className="ml-4">
               <h3 className="font-medium text-xl">Plataforma</h3>
