@@ -1,13 +1,42 @@
-// Update this page (the content is just a fallback if you fail to update the page)
 
-const Index = () => {
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
+import AppLayout from "../components/Layout/AppLayout";
+import OnboardingFlow from "../components/onboarding/OnboardingFlow";
+import Dashboard from "../components/dashboard/Dashboard";
+import DayStart from "../components/tracking/DayStart";
+import IncomeEntry from "../components/tracking/IncomeEntry";
+import ExpenseEntry from "../components/tracking/ExpenseEntry";
+import StatsSummary from "../components/statistics/StatsSummary";
+import { AppProvider } from "../context/AppContext";
+
+const Index: React.FC = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <AppProvider>
+      <IndexContent />
+    </AppProvider>
+  );
+};
+
+const IndexContent: React.FC = () => {
+  const { hasCompletedSetup } = useAppContext();
+  
+  if (!hasCompletedSetup) {
+    return <OnboardingFlow />;
+  }
+  
+  return (
+    <AppLayout>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/day-start" element={<DayStart />} />
+        <Route path="/income" element={<IncomeEntry />} />
+        <Route path="/expenses" element={<ExpenseEntry />} />
+        <Route path="/stats" element={<StatsSummary />} />
+        {/* Additional routes will be added as needed */}
+      </Routes>
+    </AppLayout>
   );
 };
 

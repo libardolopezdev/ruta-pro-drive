@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,37 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// RutaPro custom colors
+				platform: {
+					uber: '#000000',
+					didi: '#fc4c01',
+					indrive: '#c1f11d',
+					mano: '#1e88e5',
+					coopebombas: '#0d768c'
+				},
+				expense: {
+					fuel: '#f97316',
+					food: '#84cc16',
+					wash: '#0ea5e9',
+					maintenance: '#8b5cf6',
+					other: '#64748b'
+				},
+				taxi: {
+					primary: '#f59e0b',
+					secondary: '#fbbf24',
+					accent: '#fef3c7',
+					background: '#fffbeb',
+					foreground: '#78350f',
+					muted: '#fdba74',
+				},
+				rideshare: {
+					primary: '#1e293b',
+					secondary: '#334155',
+					accent: '#94a3b8',
+					background: '#0f172a',
+					foreground: '#f8fafc',
+					muted: '#475569',
 				}
 			},
 			borderRadius: {

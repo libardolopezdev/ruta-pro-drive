@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,19 +36,12 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -90,12 +84,98 @@
   }
 }
 
+/* Theme classes for taxi and platform themes */
+.taxi-theme {
+  --background: 48 100% 96%;
+  --foreground: 35 92% 26%;
+
+  --card: 45 100% 96%;
+  --card-foreground: 35 92% 26%;
+
+  --popover: 45 100% 96%;
+  --popover-foreground: 35 92% 26%;
+
+  --primary: 43 96% 51%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 40 96% 65%;
+  --secondary-foreground: 35 92% 26%;
+
+  --muted: 32 98% 83%;
+  --muted-foreground: 30 6% 25%;
+
+  --accent: 43 100% 91%;
+  --accent-foreground: 35 92% 26%;
+
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 43 66% 85%;
+  --input: 43 66% 85%;
+  --ring: 43 96% 51%;
+}
+
+.platform-theme {
+  --background: 222 47% 11%;
+  --foreground: 210 40% 98%;
+
+  --card: 222 47% 11%;
+  --card-foreground: 210 40% 98%;
+
+  --popover: 222 47% 11%;
+  --popover-foreground: 210 40% 98%;
+
+  --primary: 214 32% 29%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 214 32% 20%;
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 214 25% 35%;
+  --muted-foreground: 215 20% 75%;
+
+  --accent: 214 32% 20%;
+  --accent-foreground: 210 40% 98%;
+
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 224.3 76.3% 48%;
+}
+
 @layer base {
   * {
     @apply border-border;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground min-h-screen;
   }
+}
+
+/* Custom styles for RutaPro */
+.platform-badge {
+  @apply px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap;
+}
+
+.platform-badge-uber {
+  @apply bg-black text-white;
+}
+
+.platform-badge-didi {
+  @apply bg-platform-didi text-white;
+}
+
+.platform-badge-indrive {
+  @apply bg-platform-indrive text-black;
+}
+
+.platform-badge-mano {
+  @apply bg-platform-mano text-white;
+}
+
+.platform-badge-coopebombas {
+  @apply bg-platform-coopebombas text-white;
 }
