@@ -10,6 +10,7 @@ import DayEnd from "../components/tracking/DayEnd";
 import IncomeEntry from "../components/tracking/IncomeEntry";
 import ExpenseEntry from "../components/tracking/ExpenseEntry";
 import StatsSummary from "../components/statistics/StatsSummary";
+import TestDataGenerator from "../components/testing/TestDataGenerator";
 import { AppProvider } from "../context/AppContext";
 
 const Index: React.FC = () => {
@@ -36,6 +37,7 @@ const IndexContent: React.FC = () => {
         <Route path="/income" element={<IncomeEntry />} />
         <Route path="/expenses" element={<ExpenseEntry />} />
         <Route path="/stats" element={<StatsSummary />} />
+        <Route path="/test-data" element={<TestDataGenerator />} />
         {/* If no route matches, show Dashboard */}
         <Route path="*" element={<Dashboard />} />
       </Routes>

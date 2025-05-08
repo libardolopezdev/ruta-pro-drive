@@ -1,10 +1,11 @@
+
 import React from "react";
 import { useAppContext } from "../../context/AppContext";
 import { generateId, saveDay } from "../../utils/storage";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Separator } from "../../components/ui/separator";
-import { Play, PlusCircle, Clock, BanknoteIcon, Car } from "lucide-react";
+import { Play, PlusCircle, Clock, BanknoteIcon, Car, Database } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PauseButton from "../tracking/PauseButton";
 
@@ -50,6 +51,16 @@ const Dashboard: React.FC = () => {
               </div>
               <Button onClick={startNewDay} className="w-full">
                 Iniciar jornada
+              </Button>
+              
+              {/* Botón para generar datos de prueba */}
+              <Button 
+                variant="outline" 
+                onClick={() => navigate("/test-data")} 
+                className="w-full"
+              >
+                <Database className="mr-2 h-4 w-4" />
+                Generar datos de prueba
               </Button>
             </div>
           </CardContent>
