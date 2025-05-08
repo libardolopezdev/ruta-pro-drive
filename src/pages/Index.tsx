@@ -36,7 +36,8 @@ const IndexContent: React.FC = () => {
         <Route path="/income" element={<IncomeEntry />} />
         <Route path="/expenses" element={<ExpenseEntry />} />
         <Route path="/stats" element={<StatsSummary />} />
-        {/* Additional routes will be added as needed */}
+        {/* If no route matches, show Dashboard */}
+        <Route path="*" element={<Dashboard />} />
       </Routes>
     </AppLayout>
   );
