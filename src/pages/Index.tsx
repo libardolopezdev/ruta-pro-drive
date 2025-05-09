@@ -12,6 +12,7 @@ import ExpenseEntry from "../components/tracking/ExpenseEntry";
 import StatsSummary from "../components/statistics/StatsSummary";
 import TestDataGenerator from "../components/testing/TestDataGenerator";
 import { AppProvider } from "../context/AppContext";
+import { Navigate } from "react-router-dom";
 
 const Index: React.FC = () => {
   return (
@@ -22,7 +23,7 @@ const Index: React.FC = () => {
 };
 
 const IndexContent: React.FC = () => {
-  const { hasCompletedSetup } = useAppContext();
+  const { hasCompletedSetup, userConfig } = useAppContext();
   
   if (!hasCompletedSetup) {
     return <OnboardingFlow />;
@@ -38,6 +39,7 @@ const IndexContent: React.FC = () => {
         <Route path="/expenses" element={<ExpenseEntry />} />
         <Route path="/stats" element={<StatsSummary />} />
         <Route path="/test-data" element={<TestDataGenerator />} />
+        <Route path="/settings" element={<Navigate to="/stats" replace />} />
         {/* If no route matches, show Dashboard */}
         <Route path="*" element={<Dashboard />} />
       </Routes>

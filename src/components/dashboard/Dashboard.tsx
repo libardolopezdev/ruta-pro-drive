@@ -1,11 +1,11 @@
 
-import React from "react";
+import React, { useMemo } from "react";
 import { useAppContext } from "../../context/AppContext";
 import { generateId, saveDay } from "../../utils/storage";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Separator } from "../../components/ui/separator";
-import { Play, PlusCircle, Clock, BanknoteIcon, Car, Database } from "lucide-react";
+import { Play, PlusCircle, Clock, BanknoteIcon, Car, Database, CreditCard, QrCode, Ticket } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PauseButton from "../tracking/PauseButton";
 
@@ -26,6 +26,45 @@ const Dashboard: React.FC = () => {
       year: 'numeric' 
     });
   };
+
+  // Calcular los servicios agrupados por plataforma
+  const platformServiceCounts = useMemo(() => {
+    if (!activeDay) return {};
+    
+    const counts: Record<string, number> = {};
+    
+    activeDay.incomes.forEach(income => {
+      counts[income.platform] = (counts[income.platform] || 0) + 1;
+    });
+    
+    // Ordenar de mayor a menor
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .reduce((obj, [key, value]) => {
+        obj[key] = value;
+        return obj;
+      }, {} as Record<string, number>);
+  }, [activeDay]);
+
+  // Calcular los ingresos agrupados por método de pago
+  const paymentMethodTotals = useMemo(() => {
+    if (!activeDay) return { cash: 0, electronic: 0 };
+    
+    const totals = {
+      cash: 0,
+      electronic: 0,
+    };
+    
+    activeDay.incomes.forEach(income => {
+      if (income.paymentMethod === 'cash') {
+        totals.cash += income.amount;
+      } else {
+        totals.electronic += income.amount;
+      }
+    });
+    
+    return totals;
+  }, [activeDay]);
 
   return (
     <div className="space-y-6">
@@ -129,29 +168,43 @@ const Dashboard: React.FC = () => {
               <div className="space-y-4">
                 {activeDay.incomes.length > 0 ? (
                   <>
-                    <h3 className="text-sm font-medium">Últimos servicios</h3>
-                    <div className="space-y-3">
-                      {activeDay.incomes.slice(0, 3).map((income, index) => (
-                        <div key={income.id} className="flex justify-between items-center">
-                          <div className="flex items-center">
-                            <div className={`platform-badge platform-badge-${income.platform}`}>
-                              {income.platform.charAt(0).toUpperCase() + income.platform.slice(1)}
+                    <h3 className="text-sm font-medium">Plataformas más utilizadas</h3>
+                    <div className="space-y-2">
+                      {Object.entries(platformServiceCounts).map(([platformId, count], index) => (
+                        <div key={platformId} className="flex justify-between items-center">
+                          <div>
+                            <div className={`platform-badge platform-badge-${platformId}`}>
+                              {platformId.charAt(0).toUpperCase() + platformId.slice(1)}
                             </div>
-                            <span className="ml-2 text-sm text-muted-foreground">
-                              {formatTime(income.timestamp)}
-                            </span>
                           </div>
-                          <span className="font-medium">${income.amount}</span>
+                          <div className="text-sm font-medium">
+                            {count} {count === 1 ? 'servicio' : 'servicios'}
+                          </div>
                         </div>
                       ))}
-                      
-                      {activeDay.incomes.length > 3 && (
-                        <div className="text-center text-sm mt-2">
-                          <Button variant="link" onClick={() => navigate("/income")}>
-                            Ver todos ({activeDay.incomes.length})
-                          </Button>
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div className="space-y-3">
+                      <h3 className="text-sm font-medium">Ingresos por método de pago</h3>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center">
+                            <BanknoteIcon className="h-5 w-5 text-green-600 mr-2" />
+                            <span>Efectivo</span>
+                          </div>
+                          <span className="font-medium">${paymentMethodTotals.cash}</span>
                         </div>
-                      )}
+                        
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center">
+                            <CreditCard className="h-5 w-5 text-blue-600 mr-2" />
+                            <span>Electrónico</span>
+                          </div>
+                          <span className="font-medium">${paymentMethodTotals.electronic}</span>
+                        </div>
+                      </div>
                     </div>
                     
                     <Separator />
@@ -160,6 +213,15 @@ const Dashboard: React.FC = () => {
                       <span className="font-medium">Total</span>
                       <span className="font-bold">${calculateTotalIncome(activeDay.incomes)}</span>
                     </div>
+                    
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => navigate("/stats")}
+                    >
+                      Ver estadísticas completas
+                    </Button>
                   </>
                 ) : (
                   <div className="text-center py-4">

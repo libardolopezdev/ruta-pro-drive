@@ -63,15 +63,31 @@ const IncomeEntry: React.FC = () => {
       return;
     }
     
+    let finalAmount = parseFloat(amount);
+    let finalTollAmount = tollIncluded && tollAmount ? parseFloat(tollAmount) : 0;
+    
+    // Deducir el peaje del monto total del servicio
+    if (tollIncluded && tollAmount && parseFloat(tollAmount) > 0) {
+      finalAmount = finalAmount - parseFloat(tollAmount);
+      if (finalAmount <= 0) {
+        toast({
+          title: "Monto inválido",
+          description: "El monto del peaje no puede ser mayor que el monto del servicio",
+          variant: "destructive"
+        });
+        return;
+      }
+    }
+    
     const newIncome: Income = {
       id: generateId(),
       dayId: activeDay.start.id,
       timestamp,
       platform,
-      amount: parseFloat(amount),
+      amount: finalAmount,
       paymentMethod,
       tollIncluded,
-      ...(tollIncluded && tollAmount ? { tollAmount: parseFloat(tollAmount) } : {}),
+      ...(tollIncluded ? { tollAmount: finalTollAmount } : {}),
       ...(notes ? { notes } : {})
     };
     
@@ -85,7 +101,7 @@ const IncomeEntry: React.FC = () => {
     
     toast({
       title: "¡Ingreso registrado!",
-      description: `Has registrado un nuevo ingreso de $${amount}`
+      description: `Has registrado un nuevo ingreso de $${finalAmount}`
     });
     
     navigate("/");
@@ -231,6 +247,9 @@ const IncomeEntry: React.FC = () => {
               value={tollAmount}
               onChange={(e) => setTollAmount(e.target.value)}
             />
+            <p className="text-xs text-muted-foreground">
+              Este monto será descontado del valor total del servicio
+            </p>
           </div>
         )}
         

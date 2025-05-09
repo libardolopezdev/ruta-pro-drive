@@ -95,24 +95,24 @@
   --popover: 45 100% 96%;
   --popover-foreground: 35 92% 26%;
 
-  --primary: 43 96% 51%;
+  --primary: 45 97% 50%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 40 96% 65%;
+  --secondary: 42 96% 65%;
   --secondary-foreground: 35 92% 26%;
 
-  --muted: 32 98% 83%;
+  --muted: 42 95% 85%;
   --muted-foreground: 30 6% 25%;
 
-  --accent: 43 100% 91%;
+  --accent: 45 100% 91%;
   --accent-foreground: 35 92% 26%;
 
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 210 40% 98%;
 
-  --border: 43 66% 85%;
-  --input: 43 66% 85%;
-  --ring: 43 96% 51%;
+  --border: 45 87% 85%;
+  --input: 45 87% 85%;
+  --ring: 45 97% 50%;
 }
 
 .platform-theme {

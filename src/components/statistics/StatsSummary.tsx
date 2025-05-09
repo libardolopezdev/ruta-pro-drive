@@ -1,9 +1,9 @@
 
-import React from "react";
+import React, { useMemo } from "react";
 import { useAppContext } from "../../context/AppContext";
 import { Card, CardHeader, CardTitle, CardContent } from "../../components/ui/card";
 import { Separator } from "../../components/ui/separator";
-import { ArrowRight, TrendingUp, TrendingDown, Clock, Activity } from "lucide-react";
+import { ArrowRight, TrendingUp, TrendingDown, Clock, Activity, CreditCard, BanknoteIcon, QrCode, Ticket } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const StatsSummary: React.FC = () => {
@@ -33,11 +33,15 @@ const StatsSummary: React.FC = () => {
   const netProfit = totalIncome - totalExpenses;
   
   // Count services by platform
-  const platformCounts: Record<string, number> = {};
-  
-  activeDay.incomes.forEach(income => {
-    platformCounts[income.platform] = (platformCounts[income.platform] || 0) + 1;
-  });
+  const platformCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    
+    activeDay.incomes.forEach(income => {
+      counts[income.platform] = (counts[income.platform] || 0) + 1;
+    });
+    
+    return counts;
+  }, [activeDay]);
   
   // Find most used platform
   let mostUsedPlatform = "";
@@ -50,12 +54,32 @@ const StatsSummary: React.FC = () => {
     }
   });
   
-  // Count expenses by category
-  const expensesByCategory: Record<string, number> = {};
+  // Income by payment method
+  const incomeByPaymentMethod = useMemo(() => {
+    const summary: Record<string, number> = {
+      cash: 0,
+      card: 0,
+      voucher: 0,
+      qr: 0
+    };
+    
+    activeDay.incomes.forEach(income => {
+      summary[income.paymentMethod] += income.amount;
+    });
+    
+    return summary;
+  }, [activeDay]);
   
-  activeDay.expenses.forEach(expense => {
-    expensesByCategory[expense.category] = (expensesByCategory[expense.category] || 0) + expense.amount;
-  });
+  // Count expenses by category
+  const expensesByCategory = useMemo(() => {
+    const expenses: Record<string, number> = {};
+    
+    activeDay.expenses.forEach(expense => {
+      expenses[expense.category] = (expenses[expense.category] || 0) + expense.amount;
+    });
+    
+    return expenses;
+  }, [activeDay]);
   
   // Calculate time worked
   const calculateTimeWorked = () => {
@@ -138,11 +162,21 @@ const StatsSummary: React.FC = () => {
             </div>
           </div>
           
-          {activeDay.incomes.length > 0 && (
+          {Object.keys(platformCounts).length > 0 && (
             <div className="space-y-2">
-              <h3 className="text-sm font-medium">Plataforma más usada</h3>
-              <div className={`platform-badge platform-badge-${mostUsedPlatform}`}>
-                {mostUsedPlatform.charAt(0).toUpperCase() + mostUsedPlatform.slice(1)} ({platformCounts[mostUsedPlatform]})
+              <h3 className="text-sm font-medium">Servicios por plataforma</h3>
+              <div className="space-y-2">
+                {Object.entries(platformCounts)
+                  .sort((a, b) => b[1] - a[1])
+                  .map(([platform, count]) => (
+                    <div key={platform} className="flex justify-between items-center">
+                      <div className={`platform-badge platform-badge-${platform}`}>
+                        {platform.charAt(0).toUpperCase() + platform.slice(1)}
+                      </div>
+                      <div className="font-medium">{count} {count === 1 ? 'servicio' : 'servicios'}</div>
+                    </div>
+                  ))
+                }
               </div>
             </div>
           )}
@@ -155,6 +189,46 @@ const StatsSummary: React.FC = () => {
               </div>
             </div>
           )}
+          
+          <Separator />
+          
+          <div className="space-y-3">
+            <h3 className="text-sm font-medium">Ingresos por método de pago</h3>
+            
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <BanknoteIcon className="h-5 w-5 text-green-600 mr-2" />
+                  <span>Efectivo</span>
+                </div>
+                <span className="font-medium">{formatCurrency(incomeByPaymentMethod.cash)}</span>
+              </div>
+              
+              <div className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <CreditCard className="h-5 w-5 text-blue-600 mr-2" />
+                  <span>Tarjeta</span>
+                </div>
+                <span className="font-medium">{formatCurrency(incomeByPaymentMethod.card)}</span>
+              </div>
+              
+              <div className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <Ticket className="h-5 w-5 text-purple-600 mr-2" />
+                  <span>Vale</span>
+                </div>
+                <span className="font-medium">{formatCurrency(incomeByPaymentMethod.voucher)}</span>
+              </div>
+              
+              <div className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <QrCode className="h-5 w-5 text-indigo-600 mr-2" />
+                  <span>QR</span>
+                </div>
+                <span className="font-medium">{formatCurrency(incomeByPaymentMethod.qr)}</span>
+              </div>
+            </div>
+          </div>
           
           <Separator />
           
