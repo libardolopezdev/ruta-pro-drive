@@ -14,7 +14,7 @@ const Settings: React.FC = () => {
   // Toggle between taxi and platform theme
   const toggleTheme = () => {
     const newTheme = userConfig.theme === "taxi" ? "platform" : "taxi";
-    updateUserConfig({ theme });
+    updateUserConfig({ theme: newTheme });
     
     // Apply theme change
     document.body.classList.remove("taxi-theme", "platform-theme");
