@@ -5,9 +5,10 @@ import { Card, CardHeader, CardTitle, CardContent } from "../../components/ui/ca
 import { Separator } from "../../components/ui/separator";
 import { ArrowRight, TrendingUp, TrendingDown, Clock, Activity, CreditCard, BanknoteIcon, QrCode, Ticket } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { formatCurrency } from "@/utils/format";
 
 const StatsSummary: React.FC = () => {
-  const { activeDay } = useAppContext();
+  const { activeDay, userConfig } = useAppContext();
   const navigate = useNavigate();
   
   if (!activeDay) {
@@ -97,16 +98,6 @@ const StatsSummary: React.FC = () => {
   };
   
   const timeWorked = calculateTimeWorked();
-  
-  // Format numbers
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-CO', { 
-      style: 'currency', 
-      currency: 'COP',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
-  };
   
   return (
     <div className="space-y-6">

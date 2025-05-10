@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import {
   Moon, Sun, UserCog, Palette, 
-  Info, CreditCard, Globe, CircleDollarSign
+  Info, CreditCard, Globe, CircleDollarSign, LogOut
 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { CurrencyConfig } from "@/types";
@@ -27,6 +27,7 @@ import { CurrencyConfig } from "@/types";
 const Settings: React.FC = () => {
   const { userConfig, updateUserConfig, setCurrency, isAuthenticated, setUserAuth } = useAppContext();
   const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
   const [loginName, setLoginName] = useState("");
   
   // Toggle between taxi and platform theme
@@ -73,6 +74,21 @@ const Settings: React.FC = () => {
       variant: "default"
     });
   };
+  
+  const handleLogout = () => {
+    // Implementation would go here in a real app
+    toast({
+      title: "Función en desarrollo",
+      description: "El cierre de sesión estará disponible próximamente",
+    });
+  };
+  
+  const handleGoogleAuth = () => {
+    toast({
+      title: "Google Auth",
+      description: "La autenticación con Google estará disponible próximamente",
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -111,6 +127,17 @@ const Settings: React.FC = () => {
                 />
               </div>
               
+              <div className="grid gap-2">
+                <Label htmlFor="password">Contraseña</Label>
+                <Input 
+                  id="password" 
+                  type="password"
+                  placeholder="••••••••"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                />
+              </div>
+              
               <Button type="submit" className="w-full bg-primary">
                 Iniciar sesión
               </Button>
@@ -127,7 +154,7 @@ const Settings: React.FC = () => {
               </div>
             </div>
             
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full" onClick={handleGoogleAuth}>
               <svg className="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
@@ -151,7 +178,7 @@ const Settings: React.FC = () => {
             <div className="space-y-0.5">
               <Label htmlFor="theme-toggle">Tema</Label>
               <div className="text-sm text-muted-foreground">
-                {userConfig.theme === "taxi" ? "Taxi (Amarillo)" : "Plataforma (Oscuro)"}
+                {userConfig.theme === "taxi" ? "Taxi (Amarillo)" : "Plataforma (Azul)"}
               </div>
             </div>
             <div className="flex items-center space-x-2">
@@ -210,9 +237,17 @@ const Settings: React.FC = () => {
                 </div>
               </div>
               
-              <div>
+              <div className="space-y-2">
                 <Button variant="outline" className="w-full">
                   Cambiar contraseña
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  className="w-full text-destructive border-destructive hover:bg-destructive/10"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="mr-2 h-4 w-4" /> Cerrar sesión
                 </Button>
               </div>
               

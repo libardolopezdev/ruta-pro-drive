@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useAppContext, AppProvider } from "../context/AppContext";
 import AppLayout from "../components/Layout/AppLayout";
@@ -21,9 +21,24 @@ const Index: React.FC = () => {
   );
 };
 
+// Protected route component
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { activeDay } = useAppContext();
+  
+  if (!activeDay) {
+    toast({
+      title: "Jornada no iniciada",
+      description: "Debes iniciar una jornada para acceder a esta página",
+      variant: "destructive",
+    });
+    return <Navigate to="/day-start" replace />;
+  }
+  
+  return <>{children}</>;
+};
+
 const IndexContent: React.FC = () => {
   const { hasCompletedSetup, userConfig, activeDay } = useAppContext();
-  const location = useLocation();
   
   if (!hasCompletedSetup) {
     return <OnboardingFlow />;
@@ -36,22 +51,35 @@ const IndexContent: React.FC = () => {
           activeDay ? <Dashboard /> : <Navigate to="/day-start" replace />
         } />
         <Route path="/day-start" element={<DayStart />} />
+        
+        {/* Protected routes - Only accessible with active day */}
         <Route path="/day-end" element={
-          activeDay ? <DayEnd /> : <Navigate to="/day-start" replace />
+          <ProtectedRoute>
+            <DayEnd />
+          </ProtectedRoute>
         } />
         <Route path="/income" element={
-          activeDay ? <IncomeEntry /> : <Navigate to="/day-start" replace />
+          <ProtectedRoute>
+            <IncomeEntry />
+          </ProtectedRoute>
         } />
         <Route path="/expenses" element={
-          activeDay ? <ExpenseEntry /> : <Navigate to="/day-start" replace />
+          <ProtectedRoute>
+            <ExpenseEntry />
+          </ProtectedRoute>
         } />
         <Route path="/stats" element={
-          activeDay ? <StatsSummary /> : <Navigate to="/day-start" replace />
+          <ProtectedRoute>
+            <StatsSummary />
+          </ProtectedRoute>
         } />
+        
+        {/* Settings is always accessible */}
         <Route path="/settings" element={<Settings />} />
-        {/* If no route matches, redirect based on active day */}
+        
+        {/* Redirect to appropriate page if route not found */}
         <Route path="*" element={
-          activeDay ? <Dashboard /> : <Navigate to="/day-start" replace />
+          activeDay ? <Navigate to="/" replace /> : <Navigate to="/day-start" replace />
         } />
       </Routes>
     </AppLayout>

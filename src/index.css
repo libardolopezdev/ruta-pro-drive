@@ -14,10 +14,10 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 13%;
 
-    --primary: 208 80% 51%;
+    --primary: 207 78% 51%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 122 41% 44%;
+    --secondary: 122 42% 45%;
     --secondary-foreground: 210 40% 98%;
 
     --muted: 220 14% 96%;
@@ -126,36 +126,37 @@
 }
 
 .platform-theme {
-  --background: 210 33% 98%;
-  --foreground: 0 0% 13%;
+  /* Updated colors based on your provided palette */
+  --background: 210 30% 98%;  /* #F5F7FA - Fondo claro */
+  --foreground: 0 0% 13%;     /* #212121 - Texto principal */
 
   --card: 0 0% 100%;
-  --card-foreground: 0 0% 13%;
+  --card-foreground: 0 0% 13%;    /* #212121 - Texto principal */
 
   --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 13%;
-
-  --primary: 208 80% 51%;
+  --popover-foreground: 0 0% 13%; /* #212121 - Texto principal */
+  
+  --primary: 207 78% 51%;         /* #1E88E5 - Primario */
   --primary-foreground: 210 40% 98%;
-
-  --secondary: 122 41% 44%;
+  
+  --secondary: 122 42% 45%;       /* #43A047 - Secundario */
   --secondary-foreground: 210 40% 98%;
-
+  
   --muted: 220 14% 96%;
-  --muted-foreground: 0 0% 46%;
-
-  --accent: 199 98% 41%;
-  --accent-foreground: 210 40% 98%;
-
-  --destructive: 0 72% 51%;
+  --muted-foreground: 0 0% 46%;   /* #757575 - Texto secundario */
+  
+  --accent: 43 96% 59%;           /* #FBC02D - Acento 1 */
+  --accent-foreground: 0 0% 13%;
+  
+  --destructive: 0 64% 51%;       /* #D32F2F - Error */
   --destructive-foreground: 210 40% 98%;
-
-  --success: 122 59% 34%;
-  --warning: 27 92% 48%;
+  
+  --success: 122 48% 34%;         /* #2E7D32 - Éxito */
+  --warning: 27 92% 48%;          /* #F57C00 - Advertencia */
 
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --ring: 208 80% 51%;
+  --ring: 207 78% 51%;            /* #1E88E5 - Primario */
 }
 
 @layer base {
