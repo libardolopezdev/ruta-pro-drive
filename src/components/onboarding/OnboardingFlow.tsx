@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowRight, Check, CircleDollarSign, CircleUser, Taxi, Car } from "lucide-react";
+import { ArrowRight, Check, CircleDollarSign, CircleUser, CarTaxiFront as Taxi, Car } from "lucide-react";
 import { CurrencyConfig } from "@/types";
 
 const OnboardingFlow: React.FC = () => {

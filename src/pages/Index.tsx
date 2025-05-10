@@ -1,7 +1,7 @@
 
 import React, { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { useAppContext } from "../context/AppContext";
+import { useAppContext, AppProvider } from "../context/AppContext";
 import AppLayout from "../components/Layout/AppLayout";
 import OnboardingFlow from "../components/onboarding/OnboardingFlow";
 import Dashboard from "../components/dashboard/Dashboard";

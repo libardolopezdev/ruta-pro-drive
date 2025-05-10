@@ -1,4 +1,3 @@
-
 import { CurrencyConfig } from "../types";
 import { getUserConfig } from "./storage";
 
@@ -16,7 +15,9 @@ export const formatCurrency = (amount: number, currency?: CurrencyConfig): strin
 
 // Format number with thousands separator
 export const formatNumber = (value: number): string => {
-  return new Intl.NumberFormat('es-CO').format(value);
+  return new Intl.NumberFormat('es-CO', {
+    useGrouping: true,
+  }).format(value);
 };
 
 // Format date in a user-friendly way
