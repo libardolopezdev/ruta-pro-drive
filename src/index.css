@@ -95,8 +95,8 @@
   --popover: 45 100% 96%;
   --popover-foreground: 35 92% 26%;
 
-  --primary: 45 97% 50%;
-  --primary-foreground: 0 0% 100%;
+  --primary: 47 100% 50%;
+  --primary-foreground: 0 0% 12%;
 
   --secondary: 42 96% 65%;
   --secondary-foreground: 35 92% 26%;
@@ -112,7 +112,7 @@
 
   --border: 45 87% 85%;
   --input: 45 87% 85%;
-  --ring: 45 97% 50%;
+  --ring: 47 100% 50%;
 }
 
 .platform-theme {

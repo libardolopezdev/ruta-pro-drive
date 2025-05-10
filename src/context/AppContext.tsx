@@ -42,6 +42,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updatedConfig = { ...userConfig, ...configUpdate };
     setUserConfig(updatedConfig);
     saveUserConfig(updatedConfig);
+    
+    // Update theme if it was changed
+    if (configUpdate.theme && configUpdate.theme !== userConfig.theme) {
+      document.body.classList.remove("taxi-theme", "platform-theme");
+      document.body.classList.add(`${configUpdate.theme}-theme`);
+    }
   };
 
   const setDriverType = (type: DriverType) => {

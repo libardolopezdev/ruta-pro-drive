@@ -15,7 +15,7 @@ const Navbar: React.FC = () => {
   }
 
   return (
-    <header className={`sticky top-0 z-10 shadow-sm ${theme === "taxi" ? "bg-taxi-primary" : "bg-rideshare-primary"}`}>
+    <header className={`sticky top-0 z-10 shadow-sm ${theme === "taxi" ? "bg-primary" : "bg-rideshare-primary"}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">

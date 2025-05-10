@@ -11,6 +11,7 @@ import IncomeEntry from "../components/tracking/IncomeEntry";
 import ExpenseEntry from "../components/tracking/ExpenseEntry";
 import StatsSummary from "../components/statistics/StatsSummary";
 import TestDataGenerator from "../components/testing/TestDataGenerator";
+import Settings from "../components/settings/Settings";
 import { AppProvider } from "../context/AppContext";
 import { Navigate } from "react-router-dom";
 
@@ -38,8 +39,8 @@ const IndexContent: React.FC = () => {
         <Route path="/income" element={<IncomeEntry />} />
         <Route path="/expenses" element={<ExpenseEntry />} />
         <Route path="/stats" element={<StatsSummary />} />
+        <Route path="/settings" element={<Settings />} />
         <Route path="/test-data" element={<TestDataGenerator />} />
-        <Route path="/settings" element={<Navigate to="/stats" replace />} />
         {/* If no route matches, show Dashboard */}
         <Route path="*" element={<Dashboard />} />
       </Routes>
