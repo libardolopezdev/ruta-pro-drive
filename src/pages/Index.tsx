@@ -1,6 +1,6 @@
 
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import AppLayout from "../components/Layout/AppLayout";
 import OnboardingFlow from "../components/onboarding/OnboardingFlow";
@@ -10,10 +10,8 @@ import DayEnd from "../components/tracking/DayEnd";
 import IncomeEntry from "../components/tracking/IncomeEntry";
 import ExpenseEntry from "../components/tracking/ExpenseEntry";
 import StatsSummary from "../components/statistics/StatsSummary";
-import TestDataGenerator from "../components/testing/TestDataGenerator";
 import Settings from "../components/settings/Settings";
-import { AppProvider } from "../context/AppContext";
-import { Navigate } from "react-router-dom";
+import { toast } from "@/components/ui/use-toast";
 
 const Index: React.FC = () => {
   return (
@@ -24,7 +22,8 @@ const Index: React.FC = () => {
 };
 
 const IndexContent: React.FC = () => {
-  const { hasCompletedSetup, userConfig } = useAppContext();
+  const { hasCompletedSetup, userConfig, activeDay } = useAppContext();
+  const location = useLocation();
   
   if (!hasCompletedSetup) {
     return <OnboardingFlow />;
@@ -33,16 +32,27 @@ const IndexContent: React.FC = () => {
   return (
     <AppLayout>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={
+          activeDay ? <Dashboard /> : <Navigate to="/day-start" replace />
+        } />
         <Route path="/day-start" element={<DayStart />} />
-        <Route path="/day-end" element={<DayEnd />} />
-        <Route path="/income" element={<IncomeEntry />} />
-        <Route path="/expenses" element={<ExpenseEntry />} />
-        <Route path="/stats" element={<StatsSummary />} />
+        <Route path="/day-end" element={
+          activeDay ? <DayEnd /> : <Navigate to="/day-start" replace />
+        } />
+        <Route path="/income" element={
+          activeDay ? <IncomeEntry /> : <Navigate to="/day-start" replace />
+        } />
+        <Route path="/expenses" element={
+          activeDay ? <ExpenseEntry /> : <Navigate to="/day-start" replace />
+        } />
+        <Route path="/stats" element={
+          activeDay ? <StatsSummary /> : <Navigate to="/day-start" replace />
+        } />
         <Route path="/settings" element={<Settings />} />
-        <Route path="/test-data" element={<TestDataGenerator />} />
-        {/* If no route matches, show Dashboard */}
-        <Route path="*" element={<Dashboard />} />
+        {/* If no route matches, redirect based on active day */}
+        <Route path="*" element={
+          activeDay ? <Dashboard /> : <Navigate to="/day-start" replace />
+        } />
       </Routes>
     </AppLayout>
   );

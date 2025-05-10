@@ -14,12 +14,21 @@ export interface ExpenseCategory {
   color: string;
 }
 
+export interface CurrencyConfig {
+  code: string;
+  symbol: string;
+  name: string;
+}
+
 export interface UserConfig {
   driverType: DriverType;
   platforms: Platform[];
   vehicleColor: string;
   expenseCategories: ExpenseCategory[];
   theme: "taxi" | "platform";
+  currency: CurrencyConfig;
+  email?: string;
+  name?: string;
 }
 
 export interface DayStart {

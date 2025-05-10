@@ -63,7 +63,22 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// RutaPro custom colors
+				// New color palette
+				app: {
+					primary: '#1E88E5',       // Botones principales, encabezados
+					secondary: '#43A047',     // Botones secundarios, estadísticas positivas
+					accent1: '#FBC02D',       // Elementos interactivos, alertas suaves
+					accent2: '#0288D1',       // Fondos secundarios, estados hover
+					bgLight: '#F5F7FA',       // Fondo en modo claro
+					bgDark: '#212121',        // Fondo en modo oscuro
+					textMain: '#212121',      // Texto en modo claro
+					textSecondary: '#757575', // Descripciones, etiquetas
+					textDark: '#E0E0E0',      // Texto en modo oscuro
+					success: '#2E7D32',       // Mensajes de confirmación
+					error: '#D32F2F',         // Mensajes de error
+					warning: '#F57C00'        // Alertas intermedias
+				},
+				// RutaPro platform colors
 				platform: {
 					uber: '#000000',
 					didi: '#fc4c01',

@@ -1,9 +1,9 @@
-
-import { UserConfig, DayStart, Income, Expense, Day } from "../types";
+import { UserConfig, DayStart, Income, Expense, Day, CurrencyConfig } from "../types";
 
 const USER_CONFIG_KEY = "rutapro_user_config";
 const DAYS_KEY = "rutapro_days";
 const ACTIVE_DAY_KEY = "rutapro_active_day";
+const USER_AUTH_KEY = "rutapro_user_auth";
 
 // Default platforms
 export const DEFAULT_PLATFORMS = [
@@ -23,13 +23,41 @@ export const DEFAULT_EXPENSE_CATEGORIES = [
   { id: "other", name: "Otro", color: "#64748b" }
 ];
 
+// Available currencies
+export const AVAILABLE_CURRENCIES: CurrencyConfig[] = [
+  { code: "COP", symbol: "$", name: "Peso Colombiano" },
+  { code: "USD", symbol: "$", name: "Dólar Estadounidense" },
+  { code: "EUR", symbol: "€", name: "Euro" },
+  { code: "MXN", symbol: "$", name: "Peso Mexicano" },
+  { code: "ARS", symbol: "$", name: "Peso Argentino" },
+  { code: "CLP", symbol: "$", name: "Peso Chileno" },
+  { code: "PEN", symbol: "S/", name: "Sol Peruano" },
+];
+
 // Default user configuration
 export const DEFAULT_USER_CONFIG: UserConfig = {
   driverType: "platform",
   platforms: DEFAULT_PLATFORMS,
   vehicleColor: "gray",
   expenseCategories: DEFAULT_EXPENSE_CATEGORIES,
-  theme: "platform"
+  theme: "platform",
+  currency: AVAILABLE_CURRENCIES[0], // Default to Colombian Peso
+};
+
+// Save user authentication data
+export const saveUserAuth = (email: string, name: string): void => {
+  localStorage.setItem(USER_AUTH_KEY, JSON.stringify({ email, name }));
+};
+
+// Get user authentication data
+export const getUserAuth = () => {
+  const authStr = localStorage.getItem(USER_AUTH_KEY);
+  return authStr ? JSON.parse(authStr) : null;
+};
+
+// Check if user is authenticated
+export const isUserAuthenticated = (): boolean => {
+  return localStorage.getItem(USER_AUTH_KEY) !== null;
 };
 
 // Save user configuration
@@ -96,4 +124,22 @@ export const deleteDay = (dayId: string): void => {
 // Generate unique ID
 export const generateId = (): string => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+};
+
+// Format currency
+export const formatCurrency = (amount: number, currency?: CurrencyConfig): string => {
+  const userConfig = getUserConfig();
+  const currencyConf = currency || userConfig.currency;
+  
+  return new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: currencyConf.code,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+};
+
+// Format number with thousands separator
+export const formatNumber = (value: number): string => {
+  return new Intl.NumberFormat('es-CO').format(value);
 };
