@@ -22,7 +22,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
     <div className={`min-h-screen flex flex-col ${theme}-theme`}>
       <Navbar />
-      <main className="flex-1 container px-4 py-6 mx-auto max-w-md">
+      <main className="flex-1 container px-4 py-6 pb-20 mx-auto max-w-md">
         {children}
       </main>
     </div>

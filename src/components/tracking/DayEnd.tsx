@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 import { saveDay } from "../../utils/storage";
@@ -10,6 +10,7 @@ import { Label } from "../../components/ui/label";
 import { Textarea } from "../../components/ui/textarea";
 import { ArrowLeft, StopCircle } from "lucide-react";
 import { useToast } from "../../components/ui/use-toast";
+import { formatCurrency, formatNumber } from "@/utils/format";
 
 const DayEnd: React.FC = () => {
   const { activeDay, setActiveDay } = useAppContext();
@@ -23,6 +24,21 @@ const DayEnd: React.FC = () => {
   const [endTime, setEndTime] = useState(formattedTime);
   const [finalMileage, setFinalMileage] = useState("");
   const [notes, setNotes] = useState("");
+  const [finalCash, setFinalCash] = useState<number | null>(null);
+  
+  // Calculate initial cash + received cash - expenses
+  useEffect(() => {
+    if (activeDay) {
+      const initialCash = activeDay.start.initialCash || 0;
+      const cashIncome = activeDay.incomes
+        .filter(income => income.paymentMethod === 'cash')
+        .reduce((sum, income) => sum + income.amount, 0);
+      const expenses = activeDay.expenses.reduce((sum, expense) => sum + expense.amount, 0);
+      
+      const calculatedFinalCash = initialCash + cashIncome - expenses;
+      setFinalCash(calculatedFinalCash);
+    }
+  }, [activeDay]);
   
   const handleEndDay = () => {
     if (!activeDay) {
@@ -60,6 +76,7 @@ const DayEnd: React.FC = () => {
       end: {
         endTime,
         finalMileage: finalMileageNum,
+        finalCash: finalCash || 0,
         ...(notes ? { notes } : {})
       },
       start: {
@@ -89,7 +106,7 @@ const DayEnd: React.FC = () => {
   }
   
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-24">
       <div className="flex items-center">
         <Button 
           variant="ghost" 
@@ -124,7 +141,27 @@ const DayEnd: React.FC = () => {
             required
           />
           <p className="text-xs text-muted-foreground">
-            Kilometraje inicial: {activeDay.start.initialMileage}
+            Kilometraje inicial: {formatNumber(activeDay.start.initialMileage)}
+          </p>
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="finalCash">Efectivo final</Label>
+          <div className="relative">
+            <Input
+              id="finalCash"
+              type="number"
+              className="pl-8"
+              placeholder="0"
+              value={finalCash === null ? "" : finalCash}
+              onChange={(e) => setFinalCash(e.target.value ? Number(e.target.value) : 0)}
+            />
+            <div className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">
+              {activeDay.userConfig?.currency?.symbol || "$"}
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Calculado: {formatCurrency(finalCash || 0)} (Efectivo inicial + recibido - gastos)
           </p>
         </div>
         
