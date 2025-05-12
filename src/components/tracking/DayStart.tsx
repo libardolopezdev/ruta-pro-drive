@@ -13,7 +13,7 @@ import { useToast } from "../../components/ui/use-toast";
 import { Day } from "../../types";
 
 const DayStart: React.FC = () => {
-  const { setActiveDay } = useAppContext();
+  const { setActiveDay, userConfig } = useAppContext();
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -104,13 +104,19 @@ const DayStart: React.FC = () => {
         
         <div className="space-y-2">
           <Label htmlFor="initialCash">Efectivo inicial (opcional)</Label>
-          <Input
-            id="initialCash"
-            type="number"
-            placeholder="Ej. 20000"
-            value={initialCash}
-            onChange={(e) => setInitialCash(e.target.value)}
-          />
+          <div className="relative">
+            <Input
+              id="initialCash"
+              type="number"
+              className="pl-8"
+              placeholder="0"
+              value={initialCash}
+              onChange={(e) => setInitialCash(e.target.value)}
+            />
+            <div className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">
+              {userConfig?.currency?.symbol || "$"}
+            </div>
+          </div>
         </div>
         
         <div className="space-y-2">
