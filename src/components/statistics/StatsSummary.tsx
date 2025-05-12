@@ -1,5 +1,5 @@
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../context/AppContext";
 import { Card, CardHeader, CardTitle, CardContent } from "../../components/ui/card";
 import { Separator } from "../../components/ui/separator";
@@ -14,6 +14,21 @@ const StatsSummary: React.FC = () => {
   const navigate = useNavigate();
   const [allDays, setAllDays] = useState<Day[]>([]);
   const [selectedDay, setSelectedDay] = useState<Day | null>(null);
+  
+  // Initialize platform counts and payment method summary outside of useMemo
+  const [platformCounts, setPlatformCounts] = useState<Record<string, number>>({});
+  const [incomeByPaymentMethod, setIncomeByPaymentMethod] = useState<Record<string, number>>({
+    cash: 0,
+    card: 0,
+    voucher: 0,
+    qr: 0
+  });
+  const [expensesByCategory, setExpensesByCategory] = useState<Record<string, number>>({});
+  const [totalIncome, setTotalIncome] = useState(0);
+  const [totalExpenses, setTotalExpenses] = useState(0);
+  const [mostUsedPlatform, setMostUsedPlatform] = useState("");
+  const [highestCount, setHighestCount] = useState(0);
+  const [timeWorked, setTimeWorked] = useState({ hours: 0, minutes: 0 });
   
   // Load all days from storage
   useEffect(() => {
@@ -35,6 +50,89 @@ const StatsSummary: React.FC = () => {
     }
   }, [activeDay]);
   
+  // Calculate statistics when selectedDay changes
+  useEffect(() => {
+    if (selectedDay) {
+      // Total income and expenses
+      const calcTotalIncome = selectedDay.incomes.reduce((sum, income) => sum + income.amount, 0);
+      const calcTotalExpenses = selectedDay.expenses.reduce((sum, expense) => sum + expense.amount, 0);
+      setTotalIncome(calcTotalIncome);
+      setTotalExpenses(calcTotalExpenses);
+      
+      // Platform counts
+      const counts: Record<string, number> = {};
+      selectedDay.incomes.forEach(income => {
+        counts[income.platform] = (counts[income.platform] || 0) + 1;
+      });
+      setPlatformCounts(counts);
+      
+      // Most used platform
+      let tempMostUsed = "";
+      let tempHighest = 0;
+      Object.entries(counts).forEach(([platform, count]) => {
+        if (count > tempHighest) {
+          tempMostUsed = platform;
+          tempHighest = count;
+        }
+      });
+      setMostUsedPlatform(tempMostUsed);
+      setHighestCount(tempHighest);
+      
+      // Payment methods
+      const paymentSummary: Record<string, number> = {
+        cash: 0,
+        card: 0,
+        voucher: 0,
+        qr: 0
+      };
+      
+      selectedDay.incomes.forEach(income => {
+        paymentSummary[income.paymentMethod] += income.amount;
+      });
+      setIncomeByPaymentMethod(paymentSummary);
+      
+      // Expenses by category
+      const expensesSummary: Record<string, number> = {};
+      selectedDay.expenses.forEach(expense => {
+        expensesSummary[expense.category] = (expensesSummary[expense.category] || 0) + expense.amount;
+      });
+      setExpensesByCategory(expensesSummary);
+      
+      // Calculate time worked
+      setTimeWorked(calculateTimeWorked(selectedDay));
+    }
+  }, [selectedDay]);
+  
+  // Calculate time worked helper function
+  const calculateTimeWorked = (day: Day) => {
+    if (day.end) {
+      // If day has ended, calculate from start time to end time
+      const [startHours, startMinutes] = day.start.startTime.split(':').map(Number);
+      const [endHours, endMinutes] = day.end.endTime.split(':').map(Number);
+      
+      let diffMinutes = (endHours * 60 + endMinutes) - (startHours * 60 + startMinutes);
+      if (diffMinutes < 0) diffMinutes += 24 * 60; // Handle cases crossing midnight
+      
+      const hours = Math.floor(diffMinutes / 60);
+      const minutes = diffMinutes % 60;
+      
+      return { hours, minutes };
+    } else {
+      // If active day, calculate from start time to now
+      const [startHours, startMinutes] = day.start.startTime.split(':').map(Number);
+      const startDate = new Date();
+      startDate.setHours(startHours, startMinutes, 0, 0);
+      
+      const now = new Date();
+      const diffMinutes = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60));
+      
+      const hours = Math.floor(diffMinutes / 60);
+      const minutes = diffMinutes % 60;
+      
+      return { hours, minutes };
+    }
+  };
+  
   // If there's no data at all
   if (!selectedDay && allDays.length === 0) {
     return (
@@ -53,99 +151,13 @@ const StatsSummary: React.FC = () => {
     );
   }
   
-  // Use the selected day for statistics
-  const dayToDisplay = selectedDay;
-  
-  if (!dayToDisplay) {
+  // Loading state
+  if (!selectedDay) {
     return <div>Cargando estadísticas...</div>;
   }
   
-  // Calculate statistics
-  const totalIncome = dayToDisplay.incomes.reduce((sum, income) => sum + income.amount, 0);
-  const totalExpenses = dayToDisplay.expenses.reduce((sum, expense) => sum + expense.amount, 0);
   const netProfit = totalIncome - totalExpenses;
-  
-  // Count services by platform
-  const platformCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    
-    dayToDisplay.incomes.forEach(income => {
-      counts[income.platform] = (counts[income.platform] || 0) + 1;
-    });
-    
-    return counts;
-  }, [dayToDisplay]);
-  
-  // Find most used platform
-  let mostUsedPlatform = "";
-  let highestCount = 0;
-  
-  Object.entries(platformCounts).forEach(([platform, count]) => {
-    if (count > highestCount) {
-      mostUsedPlatform = platform;
-      highestCount = count;
-    }
-  });
-  
-  // Income by payment method
-  const incomeByPaymentMethod = useMemo(() => {
-    const summary: Record<string, number> = {
-      cash: 0,
-      card: 0,
-      voucher: 0,
-      qr: 0
-    };
-    
-    dayToDisplay.incomes.forEach(income => {
-      summary[income.paymentMethod] += income.amount;
-    });
-    
-    return summary;
-  }, [dayToDisplay]);
-  
-  // Count expenses by category
-  const expensesByCategory = useMemo(() => {
-    const expenses: Record<string, number> = {};
-    
-    dayToDisplay.expenses.forEach(expense => {
-      expenses[expense.category] = (expenses[expense.category] || 0) + expense.amount;
-    });
-    
-    return expenses;
-  }, [dayToDisplay]);
-  
-  // Calculate time worked
-  const calculateTimeWorked = () => {
-    if (dayToDisplay.end) {
-      // If day has ended, calculate from start time to end time
-      const [startHours, startMinutes] = dayToDisplay.start.startTime.split(':').map(Number);
-      const [endHours, endMinutes] = dayToDisplay.end.endTime.split(':').map(Number);
-      
-      let diffMinutes = (endHours * 60 + endMinutes) - (startHours * 60 + startMinutes);
-      if (diffMinutes < 0) diffMinutes += 24 * 60; // Handle cases crossing midnight
-      
-      const hours = Math.floor(diffMinutes / 60);
-      const minutes = diffMinutes % 60;
-      
-      return { hours, minutes };
-    } else {
-      // If active day, calculate from start time to now
-      const [startHours, startMinutes] = dayToDisplay.start.startTime.split(':').map(Number);
-      const startDate = new Date();
-      startDate.setHours(startHours, startMinutes, 0, 0);
-      
-      const now = new Date();
-      const diffMinutes = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60));
-      
-      const hours = Math.floor(diffMinutes / 60);
-      const minutes = diffMinutes % 60;
-      
-      return { hours, minutes };
-    }
-  };
-  
-  const timeWorked = calculateTimeWorked();
-  const isActiveDay = dayToDisplay === activeDay;
+  const isActiveDay = selectedDay === activeDay;
   
   return (
     <div className="space-y-6 pb-24">
@@ -199,7 +211,7 @@ const StatsSummary: React.FC = () => {
             <div className="bg-primary/10 p-4 rounded-lg">
               <Activity className="h-6 w-6 mb-2 text-blue-500" />
               <div className="text-sm text-muted-foreground">Total servicios</div>
-              <div className="text-xl font-bold">{dayToDisplay.incomes.length}</div>
+              <div className="text-xl font-bold">{selectedDay.incomes.length}</div>
             </div>
             
             <div className="bg-primary/10 p-4 rounded-lg">
@@ -228,11 +240,11 @@ const StatsSummary: React.FC = () => {
             </div>
           )}
           
-          {dayToDisplay.incomes.length > 0 && (
+          {selectedDay.incomes.length > 0 && (
             <div className="space-y-2">
               <h3 className="text-sm font-medium">Promedio por servicio</h3>
               <div className="font-medium">
-                {formatCurrency(totalIncome / dayToDisplay.incomes.length)}
+                {formatCurrency(totalIncome / selectedDay.incomes.length)}
               </div>
             </div>
           )}
