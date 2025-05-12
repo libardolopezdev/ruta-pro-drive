@@ -13,7 +13,7 @@ import { useToast } from "../../components/ui/use-toast";
 import { formatCurrency, formatNumber } from "@/utils/format";
 
 const DayEnd: React.FC = () => {
-  const { activeDay, setActiveDay } = useAppContext();
+  const { activeDay, setActiveDay, userConfig } = useAppContext();
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -157,7 +157,7 @@ const DayEnd: React.FC = () => {
               onChange={(e) => setFinalCash(e.target.value ? Number(e.target.value) : 0)}
             />
             <div className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">
-              {activeDay.userConfig?.currency?.symbol || "$"}
+              {userConfig?.currency?.symbol || "$"}
             </div>
           </div>
           <p className="text-xs text-muted-foreground">
