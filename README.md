@@ -1,73 +1,134 @@
-# Welcome to your Lovable project
+# Ruta Pro Drive
 
-## Project info
+## Información del proyecto
 
-**URL**: https://lovable.dev/projects/16161b95-7428-4501-8880-6862d755bc68
+**Ruta Pro Drive** es una aplicación web desarrollada para optimizar la gestión de servicios de transporte, enfocada en conductores de taxis y plataformas de transporte. La aplicación permite a los conductores registrar servicios, calcular ingresos con deducción de peajes, generar reportes estadísticos y configurar preferencias de usuario de manera eficiente.
 
-## How can I edit this code?
+### Características principales
 
-There are several ways of editing your application.
+- 📊 Registro de servicios con deducción automática de peajes
+- 📈 Reportes estadísticos por método de pago y plataforma  
+- ⚙️ Configuración de preferencias de usuario
+- 💰 Cálculo automático de ingresos y gastos
+- 📱 Interfaz intuitiva y fácil de usar
 
-**Use Lovable**
+### Problemática que resuelve
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/16161b95-7428-4501-8880-6862d755bc68) and start prompting.
+Los conductores de taxis y plataformas de transporte enfrentan dificultades para gestionar sus ingresos y operaciones de manera eficiente. Ruta Pro Drive digitaliza estos procesos manuales, mejorando la toma de decisiones financieras y proporcionando herramientas para un mejor control operativo.
 
-Changes made via Lovable will be committed automatically to this repo.
+## ¿Cómo puedo ejecutar este proyecto?
 
-**Use your preferred IDE**
+### Requisitos previos
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Node.js y npm instalados - [instalar con nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- PostgreSQL (para la base de datos)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+### Instalación y ejecución
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Paso 1: Clona el repositorio
+git clone <TU_URL_DE_GIT>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Paso 2: Navega al directorio del proyecto
+cd ruta-pro-drive
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Paso 3: Instala las dependencias
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Paso 4: Configura las variables de entorno
+cp .env.example .env
+# Edita el archivo .env con tu configuración de base de datos
+
+# Paso 5: Inicia el servidor de desarrollo
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Otras opciones de edición
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+**Editar archivos directamente en GitHub**
 
-**Use GitHub Codespaces**
+- Navega a los archivos deseados
+- Haz clic en el botón "Edit" (ícono de lápiz) 
+- Realiza tus cambios y confirma los cambios
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+**Usar GitHub Codespaces**
 
-## What technologies are used for this project?
+- Ve a la página principal del repositorio
+- Haz clic en "Code" → "Codespaces" → "New codespace"
+- Edita directamente en el navegador
 
-This project is built with:
+## Tecnologías utilizadas
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Este proyecto está construido con tecnologías modernas:
 
-## How can I deploy this project?
+- **Frontend:** React + TypeScript
+- **Estilos:** Tailwind CSS + shadcn-ui
+- **Build Tool:** Vite
+- **Backend:** Node.js (API RESTful)
+- **Base de datos:** PostgreSQL
+- **Herramientas:** GitHub Projects (metodología Kanban)
 
-Simply open [Lovable](https://lovable.dev/projects/16161b95-7428-4501-8880-6862d755bc68) and click on Share -> Publish.
+## Arquitectura del sistema
 
-## Can I connect a custom domain to my Lovable project?
+- **Cliente-Servidor:** Frontend React conectado a backend Node.js
+- **Base de datos relacional:** PostgreSQL con esquema optimizado
+- **APIs RESTful:** Para comunicación entre frontend y backend
+- **Metodología:** Desarrollo ágil con Kanban
 
-Yes, you can!
+## Cómo desplegar este proyecto
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Construcción para producción
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+```sh
+# Construir el proyecto
+npm run build
+
+# Los archivos estáticos se generan en la carpeta 'dist'
+```
+
+### Opciones de despliegue
+
+- **Vercel:** Conecta tu repositorio de GitHub para despliegue automático
+- **Netlify:** Sube la carpeta `dist` o conecta vía Git
+- **GitHub Pages:** Usa GitHub Actions para despliegue automático
+- **Railway/Render:** Para aplicaciones full-stack con base de datos
+
+### Configuración de dominio personalizado
+
+La mayoría de plataformas permiten conectar dominios personalizados desde su panel de control. Consulta la documentación específica de tu proveedor de hosting.
+
+## Estructura del proyecto
+
+```
+ruta-pro-drive/
+├── src/
+│   ├── components/     # Componentes React reutilizables
+│   ├── pages/         # Páginas principales de la aplicación
+│   ├── hooks/         # Custom hooks de React
+│   ├── utils/         # Funciones de utilidad
+│   └── types/         # Definiciones de tipos TypeScript
+├── public/            # Archivos estáticos
+└── docs/             # Documentación del proyecto
+```
+
+## Contribuir
+
+Este proyecto sigue la metodología Kanban. Para contribuir:
+
+1. Revisa los issues abiertos en GitHub
+2. Crea una rama para tu feature: `git checkout -b feature/nueva-funcionalidad`
+3. Realiza tus cambios y pruebas
+4. Crea un Pull Request con descripción detallada
+
+## Licencia
+
+Este proyecto fue desarrollado como parte de una necesidad personal y en base al curso "Métodos de Construcción de Software" en la Corporación Universitaria Iberoamericana.
+
+## Autores
+
+- **Juan Esteban Castillo Cañón** - Desarrollo Backend
+- **Libardo López Gómez** - Desarrollo Frontend
+
+---
+
+*Ruta Pro Drive - Optimizando la gestión de servicios de transporte*
