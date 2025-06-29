@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
@@ -16,16 +15,16 @@ const DayEnd: React.FC = () => {
   const { activeDay, setActiveDay, userConfig } = useAppContext();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
   // Current time formatted as HH:MM
   const now = new Date();
   const formattedTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-  
+
   const [endTime, setEndTime] = useState(formattedTime);
   const [finalMileage, setFinalMileage] = useState("");
   const [notes, setNotes] = useState("");
   const [finalCash, setFinalCash] = useState<number | null>(null);
-  
+
   // Calculate initial cash + received cash - expenses
   useEffect(() => {
     if (activeDay) {
@@ -34,12 +33,12 @@ const DayEnd: React.FC = () => {
         .filter(income => income.paymentMethod === 'cash')
         .reduce((sum, income) => sum + income.amount, 0);
       const expenses = activeDay.expenses.reduce((sum, expense) => sum + expense.amount, 0);
-      
+
       const calculatedFinalCash = initialCash + cashIncome - expenses;
       setFinalCash(calculatedFinalCash);
     }
   }, [activeDay]);
-  
+
   const handleEndDay = () => {
     if (!activeDay) {
       toast({
@@ -50,7 +49,7 @@ const DayEnd: React.FC = () => {
       navigate("/");
       return;
     }
-    
+
     if (!finalMileage) {
       toast({
         title: "Kilometraje requerido",
@@ -59,9 +58,9 @@ const DayEnd: React.FC = () => {
       });
       return;
     }
-    
+
     const finalMileageNum = parseFloat(finalMileage);
-    
+
     if (finalMileageNum < activeDay.start.initialMileage) {
       toast({
         title: "Kilometraje inválido",
@@ -70,7 +69,7 @@ const DayEnd: React.FC = () => {
       });
       return;
     }
-    
+
     const updatedDay = {
       ...activeDay,
       end: {
@@ -84,18 +83,18 @@ const DayEnd: React.FC = () => {
         isActive: false
       }
     };
-    
+
     saveDay(updatedDay);
     setActiveDay(null);
-    
+
     toast({
       title: "¡Jornada finalizada!",
       description: "Tu jornada ha sido finalizada correctamente"
     });
-    
+
     navigate("/stats");
   };
-  
+
   if (!activeDay) {
     return (
       <div className="flex flex-col items-center justify-center h-64">
@@ -104,12 +103,15 @@ const DayEnd: React.FC = () => {
       </div>
     );
   }
-  
+
+  // Moneda segura por defecto
+  const currency = userConfig?.currency ?? { code: 'COP', symbol: '$' };
+
   return (
     <div className="space-y-6 pb-24">
       <div className="flex items-center">
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           size="icon"
           onClick={() => navigate("/")}
           className="mr-2"
@@ -118,7 +120,7 @@ const DayEnd: React.FC = () => {
         </Button>
         <h1 className="text-xl font-bold">Finalizar Jornada</h1>
       </div>
-      
+
       <Card className="p-6 space-y-6">
         <div className="space-y-2">
           <Label htmlFor="endTime">Hora de finalización</Label>
@@ -129,7 +131,7 @@ const DayEnd: React.FC = () => {
             onChange={(e) => setEndTime(e.target.value)}
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="finalMileage">Kilometraje final *</Label>
           <Input
@@ -144,7 +146,7 @@ const DayEnd: React.FC = () => {
             Kilometraje inicial: {formatNumber(activeDay.start.initialMileage)}
           </p>
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="finalCash">Efectivo final</Label>
           <div className="relative">
@@ -157,14 +159,14 @@ const DayEnd: React.FC = () => {
               onChange={(e) => setFinalCash(e.target.value ? Number(e.target.value) : 0)}
             />
             <div className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">
-              {userConfig?.currency?.symbol || "$"}
+              {currency.symbol}
             </div>
           </div>
           <p className="text-xs text-muted-foreground">
-            Calculado: {formatCurrency(finalCash || 0)} (Efectivo inicial + recibido - gastos)
+            Calculado: {formatCurrency(finalCash || 0, currency)} (Efectivo inicial + recibido - gastos)
           </p>
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="notes">Notas (opcional)</Label>
           <Textarea
@@ -176,8 +178,8 @@ const DayEnd: React.FC = () => {
           />
         </div>
       </Card>
-      
-      <Button 
+
+      <Button
         onClick={handleEndDay}
         className="w-full"
       >
